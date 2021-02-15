@@ -31,8 +31,8 @@
             return Equals(edge);
         }
 
-        public override int GetHashCode() => From.GetHashCode() + To.GetHashCode();
+        public override int GetHashCode() => From.GetHashCode() - To.GetHashCode();
 
-        public override string ToString() => $"{From}; {To}";
+        public override string ToString() => $"({From} - {To})";
     }
 }

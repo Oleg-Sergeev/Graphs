@@ -1,6 +1,6 @@
 ﻿namespace Graphs
 {
-    public struct Vertex : IVertex
+    public class Vertex : IVertex
     {
         public string Name { get; }
 
@@ -16,19 +16,8 @@
 
 
 
-        public bool Equals(IVertex vertex)
-        {
-            if (vertex == default) return false;
-
-            return vertex.Name == Name;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is not Vertex vertex) return false;
-
-            return Equals(vertex);
-        }
+        public bool Equals(IVertex vertex) => vertex != default && vertex.Name == Name;
+        public override bool Equals(object obj) => obj is Vertex vertex && Equals(vertex);
 
         public override int GetHashCode() => Name.GetHashCode();
 

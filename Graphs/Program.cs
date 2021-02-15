@@ -6,28 +6,21 @@ namespace Graphs
     {
         static void Main(string[] args)
         {
-            WeightedGraph<Vertex, WeightedEdge> graph = new();
+            WeightedGraph<Vertex, WeightedEdge> graph = new(false);
 
-            graph["S"] = new("S");
             graph["1"] = new("1");
             graph["2"] = new("2");
             graph["3"] = new("3");
             graph["4"] = new("4");
-            graph["F"] = new("F");
 
-            graph.AddEdge(new WeightedEdge(graph["S"], graph["1"], 5));
-            graph.AddEdge(new WeightedEdge(graph["S"], graph["2"], 0));
-            graph.AddEdge(new WeightedEdge(graph["1"], graph["3"], 15));
-            graph.AddEdge(new WeightedEdge(graph["1"], graph["4"], 20));
-            graph.AddEdge(new WeightedEdge(graph["2"], graph["3"], 30));
-            graph.AddEdge(new WeightedEdge(graph["2"], graph["4"], 35));
-            graph.AddEdge(new WeightedEdge(graph["3"], graph["F"], 20));
-            graph.AddEdge(new WeightedEdge(graph["4"], graph["F"], 10));
 
-            var path = graph.DijkstraFindPath(graph["S"], graph["F"], out var t);
+            graph.TryAddEdge(new(graph["1"], graph["2"], 3));
+            graph.TryAddEdge(new(graph["2"], graph["1"], 5));
+            graph.TryAddEdge(new(graph["1"], graph["3"], 10));
+            graph.TryAddEdge(new(graph["1"], graph["1"], 15));
+            graph.TryAddEdge(new(graph["4"], graph["3"], 5));
 
-            Console.WriteLine(string.Join(" -> ", path));
-            Console.WriteLine(t);
+            Console.WriteLine(string.Join("\n", graph.GetChildsEdges(graph["1"])));
         }
     }
 }

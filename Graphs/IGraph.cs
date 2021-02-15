@@ -2,14 +2,16 @@
 
 namespace Graphs
 {
-    public interface IGraph<V> where V : IVertex
+    public interface IGraph<V, E> where V : IVertex where E : IEdge
     {
-        public IReadOnlyCollection<V> Vertices { get; }
+        bool IsOriented { get; }
 
-        public V this[string name] { get; set; }
+        IReadOnlyCollection<V> Vertices { get; }
+        IReadOnlyCollection<E> Edges { get; }
 
-        public bool IsOriented { get; }
 
-        void AddVertex(V vertex);
+        public void AddVertex(V vertex);
+
+        public void AddEdge(E edge);
     }
 }

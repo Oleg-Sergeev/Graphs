@@ -3,11 +3,13 @@ using System.Collections.Generic;
 
 namespace Graphs
 {
-    public class WeightedGraph<V, E> : AbstractGraph<V, E> where V : IVertex where E : IWeightedEdge
+    public class WeightedGraph<V, E> : Graph<V, E> where V : IVertex where E : IWeightedEdge
     {
-        public override bool IsOriented => true;
+        public WeightedGraph(bool isOriented = false) : base(isOriented) { }
 
 
+        public IReadOnlyCollection<IVertex> DijkstraFindPath(IVertex start, IVertex end)
+            => DijkstraFindPath(start, end, out _);
         public IReadOnlyCollection<IVertex> DijkstraFindPath(IVertex start, IVertex end, out int cost)
         {
             if (start == null) throw new ArgumentNullException(nameof(start), "vertex is null");
@@ -18,7 +20,7 @@ namespace Graphs
             if (start == end) return new List<IVertex>() { start };
 
 
-            Dictionary<string, DijkstraNode> nodes = new()
+            Dictionary<string, Node> nodes = new()
             {
                 { start.Name, new(start, 0) }
             };
@@ -30,7 +32,7 @@ namespace Graphs
                 nodes.TryAdd(vertex.Name, new(vertex, int.MaxValue));
 
 
-            DijkstraNode currentNode;
+            Node currentNode;
             while ((currentNode = GetTheCheapiestNode()) != null && currentNode.Vertex != end)
             {
                 foreach (var node in GetChildsNodes(currentNode.Vertex))
@@ -52,9 +54,9 @@ namespace Graphs
             return path;
 
 
-            DijkstraNode GetTheCheapiestNode()
+            Node GetTheCheapiestNode()
             {
-                DijkstraNode theCheapiestNode = null;
+                Node theCheapiestNode = null;
                 var weight = int.MaxValue;
 
                 foreach (var node in nodes.Values)
@@ -72,9 +74,9 @@ namespace Graphs
                 return theCheapiestNode;
             }
 
-            IEnumerable<DijkstraNode> GetChildsNodes(IVertex vertex)
+            IEnumerable<Node> GetChildsNodes(IVertex vertex)
             {
-                List<DijkstraNode> childs = new();
+                List<Node> childs = new();
 
                 foreach (var vertex_ in GetChildsVertices(vertex))
                     childs.Add(nodes[vertex_.Name]);
@@ -103,13 +105,12 @@ namespace Graphs
                 return vertices;
             }
         }
-        public IReadOnlyCollection<IVertex> DijkstraFindPath(IVertex start, IVertex end)
-            => DijkstraFindPath(start, end, out _);
 
 
-        private class DijkstraNode
+
+        private class Node
         {
-            public DijkstraNode Parent { get; set; }
+            public Node Parent { get; set; }
 
             public IVertex Vertex { get; set; }
 
@@ -118,7 +119,7 @@ namespace Graphs
             public bool HasProcessed { get; set; }
 
 
-            public DijkstraNode(IVertex vertex, int weight, DijkstraNode parent = null)
+            public Node(IVertex vertex, int weight, Node parent = null)
             {
                 Vertex = vertex;
                 Weight = weight;
